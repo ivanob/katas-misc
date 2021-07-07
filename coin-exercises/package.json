@@ -5,19 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\"", 
+    "start": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\"",
     "compile": "npx tsc && node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/hapi__hapi": "^20.0.9",
     "@types/node": "^16.0.0",
+    "nodemon": "^2.0.9",
     "typescript": "^4.3.5"
   },
   "dependencies": {
     "@hapi/hapi": "^20.1.5",
-    "@types/hapi__hapi": "^20.0.9",
-    "nodemon": "^2.0.9"
+    "axios": "^0.21.1"
   }
 }
