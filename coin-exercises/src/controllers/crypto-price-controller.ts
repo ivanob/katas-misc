@@ -8,7 +8,10 @@ import { convertResponse } from "../utils/converters";
 
 const cache: Cache = new Cache()
 
-export const cryptoPriceController = async (request: Request) => {
+type CryptoPriceResponse = {code: number, data: PriceCryptoResp}
+type CryptoPriceResponseError = {code: number, error: string}
+
+export const cryptoPriceController = async (request: Request): Promise<CryptoPriceResponse|CryptoPriceResponseError> => {
     //First step, Validation of the request
     try{
         validateRequest(request)
@@ -16,8 +19,8 @@ export const cryptoPriceController = async (request: Request) => {
         return {code: 400, error: e.message}
     }
     //Second step, check if we have the answer cached
-    const queriedDate = request.query.date
-    const cachedPrice = cache.getCachedPrice(queriedDate)
+    const requestedDate = request.query.date
+    const cachedPrice = cache.getCachedPrice(requestedDate)
 
     if(!cachedPrice){ //Response was not cached yet
         //Third step, query if we dont have the answer
@@ -25,7 +28,7 @@ export const cryptoPriceController = async (request: Request) => {
         try{
             const priceResp: AxiosResponse = await getCoingeckoCryptoPrice('bitcoin', request.query.date)
             validateResponseCoingecko(priceResp)
-            const convertedPriceResp: PriceCryptoResp = convertResponse(priceResp, queriedDate?queriedDate:new Date(Date.now()))    
+            const convertedPriceResp: PriceCryptoResp = convertResponse(priceResp, requestedDate?requestedDate:new Date(Date.now()))    
             cache.setCachedPrice(convertedPriceResp, request.query.date)
             return {code: 200, data: convertedPriceResp}
         }catch(e){

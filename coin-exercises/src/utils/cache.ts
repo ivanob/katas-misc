@@ -20,8 +20,8 @@ export class Cache {
         }
     }
 
-    public getCachedPrice(date?: Date): PriceCryptoResp|undefined{
-        if(!date){ //Client is looking for a current date
+    public getCachedPrice(requestedDate?: Date): PriceCryptoResp|undefined {
+        if(!requestedDate){ //Client is looking for a current date
             const currentTime = Date.now()
             if(currentTime < this.lastPriceRead?.timestampLastReading + MAX_DELAY_ALLOWED_MS){
                 //We are still below the maximum time of delay, so we can serve the cached response
@@ -32,18 +32,18 @@ export class Cache {
                 return undefined
             }
         }else{ //Client is looking for an historical date
-            const historicDatePrice = this.historicDatesPrices[date.toString()]
+            const historicDatePrice = this.historicDatesPrices[requestedDate.toString()]
             if(historicDatePrice){
-                console.log(`Found in cached the historical price with date ${date.toString()}`)
-                return this.historicDatesPrices[date.toString()]
+                console.log(`Found in cached the historical price with date ${requestedDate.toString()}`)
+                return this.historicDatesPrices[requestedDate.toString()]
             }else{
-                console.log(`NOT found in cache historical price with date ${date.toString()}`)
+                console.log(`NOT found in cache historical price with date ${requestedDate.toString()}`)
                 return undefined
             }
         }
     }
 
-    public setCachedPrice(price: PriceCryptoResp, date?: Date){
+    public setCachedPrice(price: PriceCryptoResp, date?: Date): void{
         if(!date){ //Client is looking for the current price
             const currentTime = Date.now()
             if(currentTime > this.lastPriceRead?.timestampLastReading + MAX_DELAY_ALLOWED_MS){
