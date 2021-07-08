@@ -10,6 +10,9 @@ import axios, { AxiosResponse } from "axios"
  *  - https://api.coingecko.com/api/v3/coins/bitcoin/history?date=10-10-2015
  */
 export const getCoingeckoCryptoPrice = (cryptoID: string = "bitcoin", date?: Date): Promise<AxiosResponse> => {
-    const url = `https://api.coingecko.com/api/v3/coins/${cryptoID}`
-    return axios.get(url)
+    var baseUrl = `https://api.coingecko.com/api/v3/coins/${cryptoID}`
+    if(date){
+        baseUrl += `/history?date=${date}`
+    }
+    return axios.get(baseUrl)
 }

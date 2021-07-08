@@ -25,13 +25,21 @@ export class Cache {
             const currentTime = Date.now()
             if(currentTime < this.lastPriceRead?.timestampLastReading + MAX_DELAY_ALLOWED_MS){
                 //We are still below the maximum time of delay, so we can serve the cached response
-                console.log(`Found in cache the current price with date ${currentTime}`)
+                console.log(`Found in cache the current price with date ${new Date(currentTime)}`)
                 return this.lastPriceRead.price
+            }else{
+                console.log(`NOT found in cache the current price with date ${new Date(currentTime)}`)
+                return undefined
             }
-            return undefined
         }else{ //Client is looking for an historical date
-            console.log(`Found in cached the historical price with date ${date.toString()}`)
-            return this.historicDatesPrices[date.toString()]
+            const historicDatePrice = this.historicDatesPrices[date.toString()]
+            if(historicDatePrice){
+                console.log(`Found in cached the historical price with date ${date.toString()}`)
+                return this.historicDatesPrices[date.toString()]
+            }else{
+                console.log(`NOT found in cache historical price with date ${date.toString()}`)
+                return undefined
+            }
         }
     }
 
@@ -40,7 +48,7 @@ export class Cache {
             const currentTime = Date.now()
             if(currentTime > this.lastPriceRead?.timestampLastReading + MAX_DELAY_ALLOWED_MS){
                 //The Maximum time of delay has expired
-                console.log(`Stored in cached the current price with date ${currentTime}`)
+                console.log(`Stored in cached the current price with date ${new Date(currentTime)}`)
                 this.lastPriceRead.price = price
                 this.lastPriceRead.timestampLastReading = currentTime
             }
