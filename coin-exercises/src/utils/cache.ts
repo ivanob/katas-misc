@@ -8,54 +8,14 @@
 
 const MAX_DELAY_ALLOWED_MS = 10 * 60 * 1000 //10 Minutes in Miliseconds
 
-export class Cache {
-    private historicDatesPrices: object
-    private lastPriceRead: CurrentPriceReading
+export const cachable = (cache = {lastRead: 0,lastValue: null}) => async fn => {
+    const now = Date.now();
+    if(now - cache.lastRead > MAX_DELAY_ALLOWED_MS) {
+        console.log(`Value not found in cache. Updating.`)
 
-    constructor(){
-        this.historicDatesPrices = {}
-        this.lastPriceRead = {
-            price: undefined,
-            timestampLastReading: 0
-        }
+        cache.lastValue = await fn();
+        cache.lastRead = now;
     }
 
-    public getCachedPrice(requestedDate?: Date): PriceCryptoResp|undefined {
-        if(!requestedDate){ //Client is looking for a current date
-            const currentTime = Date.now()
-            if(currentTime < this.lastPriceRead?.timestampLastReading + MAX_DELAY_ALLOWED_MS){
-                //We are still below the maximum time of delay, so we can serve the cached response
-                console.log(`Found in cache the current price with date ${new Date(currentTime)}`)
-                return this.lastPriceRead.price
-            }else{
-                console.log(`NOT found in cache the current price with date ${new Date(currentTime)}`)
-                return undefined
-            }
-        }else{ //Client is looking for an historical date
-            const historicDatePrice = this.historicDatesPrices[requestedDate.toString()]
-            if(historicDatePrice){
-                console.log(`Found in cached the historical price with date ${requestedDate.toString()}`)
-                return this.historicDatesPrices[requestedDate.toString()]
-            }else{
-                console.log(`NOT found in cache historical price with date ${requestedDate.toString()}`)
-                return undefined
-            }
-        }
-    }
-
-    public setCachedPrice(price: PriceCryptoResp, date?: Date): void{
-        if(!date){ //Client is looking for the current price
-            const currentTime = Date.now()
-            if(currentTime > this.lastPriceRead?.timestampLastReading + MAX_DELAY_ALLOWED_MS){
-                //The Maximum time of delay has expired
-                console.log(`Stored in cached the current price with date ${new Date(currentTime)}`)
-                this.lastPriceRead.price = price
-                this.lastPriceRead.timestampLastReading = currentTime
-            }
-        }else{ //Client is looking for an historical date
-            console.log(`Stored in cached a historical price with date ${date}`)
-            this.historicDatesPrices[date.toString()] = price
-        }
-    }
-
+    return cache.lastValue;
 }
