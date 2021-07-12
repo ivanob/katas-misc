@@ -6,16 +6,16 @@
  * future.
  */
 
-const MAX_DELAY_ALLOWED_MS = 10 * 60 * 1000 //10 Minutes in Miliseconds
+export const cachable = (cache = {}) => (fn, keyGetter) => async (...args) => {
+    // this function takes any list of arguments and returns a key
+    const key = keyGetter(...args);
 
-export const cachable = (cache = {lastRead: 0,lastValue: null}) => async fn => {
-    const now = Date.now();
-    if(now - cache.lastRead > MAX_DELAY_ALLOWED_MS) {
-        console.log(`Value not found in cache. Updating.`)
-
-        cache.lastValue = await fn();
-        cache.lastRead = now;
+    if(!cache[key]) {
+        console.log('warming cache...');
+        const value = await fn(...args);
+        cache[key] = value;
     }
 
-    return cache.lastValue;
+    return cache[key];
 }
+

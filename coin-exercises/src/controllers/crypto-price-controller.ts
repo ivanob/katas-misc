@@ -1,22 +1,11 @@
 
 import { Request } from "@hapi/hapi";
-import { AxiosResponse } from "axios";
-import { validateRequest, validateResponseCoingecko } from "../utils/validators";
-import { getCoingeckoCryptoPrice} from "../services/coingecko-service";
-import { cachable } from '../utils/cache'
-import { convertResponse } from "../utils/converters";
+import { validateRequest } from "../utils/validators";
+import { getCachedPrices} from "../services/coingecko-service";
 
 type CryptoPriceResponse = {code: number, data: PriceCryptoResp}
 type CryptoPriceResponseError = {code: number, error: string}
 
-const withCache = cachable();
-
-const priceFetcher = requestedDate => async () => {
-    const priceResp: AxiosResponse = await getCoingeckoCryptoPrice('bitcoin', requestedDate)
-    validateResponseCoingecko(priceResp)
-
-    return convertResponse(priceResp, requestedDate?requestedDate:new Date(Date.now()))
-}
 
 export const cryptoPriceController = async (request: Request): Promise<CryptoPriceResponse|CryptoPriceResponseError> => {
     //First step, Validation of the request
@@ -27,9 +16,10 @@ export const cryptoPriceController = async (request: Request): Promise<CryptoPri
         const requestedDate = request.query.date
         
         try {
-            const data = await withCache(priceFetcher(requestedDate));
+            const data = await getCachedPrices('bitcoin', requestedDate);
             return {code: 200, data}
         } catch (error) {
+            console.log('error')
             return {code: 500, error: error.message}
         }
     }catch(e){
