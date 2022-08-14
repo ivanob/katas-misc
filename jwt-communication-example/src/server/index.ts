@@ -1,8 +1,9 @@
 import 'dotenv/config';
-import express, { Request, Response } from 'express';
+import express, {Request, Response} from 'express';
 import cors from 'cors';
-import {createUser, loginUser, UserClear, UserJWT} from './users-service';
-import { validateJWT, validateParams } from './validators';
+import {createUser, loginUser, removeUser, UserClear, UserJWT} from './users-service';
+import {validateJWT, validateParams} from './validators';
+import e from 'express';
 
 const app = express();
 app.use(express.json())
@@ -16,6 +17,8 @@ const handleError = (res: Response, error: any) => {
     }else if(error.name === 'ConflictError'){
         errorStatus = 409;
     }else if(error.name === 'InvalidDataError'){
+        errorStatus = 401;
+    }else if(error.name === 'JWTError'){
         errorStatus = 401;
     }
     res.status(errorStatus).json({
@@ -49,7 +52,7 @@ app.post('/api/login', async (req: Request, res: Response) => {
         username: '',
         password: ''
     };
-    try{
+    try {
         userCredentials = validateParams(req)
         let loggedIn: UserJWT = {
             username: '',
@@ -66,8 +69,21 @@ app.post('/api/login', async (req: Request, res: Response) => {
     }
 });
 
-app.post('/api/login/remove', async (req: Express.Request, res: Express.Response) => {
-    console.log('Received POST to remove user jwt')
+app.delete('/api/login/remove', async (req: Request, res: Response) => {
+    console.log('Received POST to remove user jwt');
+    try {
+        const userCredentials = validateParams(req)
+        if(validateJWT(req)){
+            removeUser(userCredentials.username);
+            res.send("User removed succesfully");
+        }else{
+            const jwtError = new Error("The jwt token provided does not correspond to any user registered")
+            jwtError.name = 'JWTError';
+            throw jwtError;
+        }
+    } catch(error: any){
+        handleError(res, error);
+    }
 });
 
 /**
@@ -75,15 +91,15 @@ app.post('/api/login/remove', async (req: Express.Request, res: Express.Response
  */
 app.post('/api/operation', async (req: Request, res: Response) => {
     console.log('Received POST to perform an operation protected by jwt')
-    try{
+    try {
         if(validateJWT(req)){
             res.send("Operation performed succesfully!");
         }else{
-            res.status(400).json({
-                error: "The jwt token provided does not correspond to any user registered"
-            })
+            const jwtError = new Error("The jwt token provided does not correspond to any user registered")
+            jwtError.name = 'JWTError';
+            throw jwtError;
         };
-    }catch(error: any){
+    } catch(error: any){
         handleError(res, error);
     }
 });

@@ -10,6 +10,7 @@
 
 I am going to use Bearer tokens in this snippet (https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication)
  
+This project uses the extension 'REST Client' from VSCode to execute the *.rest files
 
  Documentaton used:
  - https://jwt.io/

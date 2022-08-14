@@ -36,6 +36,15 @@ export const createUser = async (username: string, password: string) => {
     return newUser;
 };
 
+export const removeUser = async (username: string) => {
+    const existsUser = findUserByUsername(username);
+
+    if(existsUser){
+        const index = registeredUsers.indexOf(existsUser);
+        registeredUsers.splice(index, 1);
+    }
+}
+
 const createJWTToken = (username: string, password: string) => {
     const payloadToken = {
         username
