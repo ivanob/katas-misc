@@ -1,4 +1,4 @@
-import { UserClear } from "./users";
+import { UserClear } from "./users-service";
 
 export const validateParams = (req: any): UserClear => {
     if(!req.body || !(req.body.username && req.body.password)){

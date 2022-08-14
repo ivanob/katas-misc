@@ -1,8 +1,13 @@
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
 
 export type UserClear = {
     username: string,
     password: string
+}
+
+export type UserJWT = UserEncrypted & {
+    jwt: string
 }
 
 export type UserEncrypted = {
@@ -27,7 +32,15 @@ export const createUser = async (username: string, password: string) => {
     return newUser;
 };
 
-export const loginUser = async (username: string, password: string) => {
+const createJWTToken = (username: string, password: string) => {
+    const payloadToken = {
+        id: '123', //FIX THIS
+        username
+    };
+    return jwt.sign(payloadToken, process.env.SECRET_WORD || 'secret')
+}
+
+export const loginUser = async (username: string, password: string): Promise<UserJWT> => {
     const registeredUser = registeredUsers.find(user => user.username === username);
 
     const passwordCorrect = (!registeredUser) 
@@ -36,5 +49,12 @@ export const loginUser = async (username: string, password: string) => {
 
     if(!registeredUser || !passwordCorrect){
         throw new Error('Invalid user or password');
+    }
+
+    const jwt = await createJWTToken(username, password);
+
+    return {
+        ...registeredUser,
+        jwt
     }
 };

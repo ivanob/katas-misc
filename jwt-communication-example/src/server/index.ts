@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import {createUser, loginUser, UserClear} from './users';
+import {createUser, loginUser, UserClear, UserJWT} from './users-service';
 import { validateParams } from './validators';
 
 const app = express();
@@ -10,6 +10,7 @@ app.use(cors());
 
 /** To register a new user */
 app.post('/api/login/register', async (req, res) => {
+    console.log('Received POST to register a new user')
     let userCredentials: UserClear = {
         username: '',
         password: ''
@@ -29,7 +30,6 @@ app.post('/api/login/register', async (req, res) => {
         );
         res.send(userLoggedIn);
     }catch(error: any){
-        console.log(error.message);
         res.status(409).json({
             error: error.message
         });
@@ -37,7 +37,8 @@ app.post('/api/login/register', async (req, res) => {
 });
 
 /** To log-in */
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
+    console.log('Received POST to login user')
     let userCredentials: UserClear = {
         username: '',
         password: ''
@@ -50,9 +51,13 @@ app.post('/api/login', (req, res) => {
         });
     }
 
-    let loggedIn = {};
+    let loggedIn: UserJWT = {
+        username: '',
+        passwordHash: '',
+        jwt: ''
+    };
     try{
-        loggedIn = loginUser(
+        loggedIn = await loginUser(
             userCredentials.username,
             userCredentials.password
         );
@@ -61,6 +66,11 @@ app.post('/api/login', (req, res) => {
             error: error.message
         })
     }
+    res.send(loggedIn);
+});
+
+app.post('/api/login/remove', async (req, res) => {
+    console.log('Received POST to remove user jwt')
 });
 
 app.listen(process.env.PORT, () => 
