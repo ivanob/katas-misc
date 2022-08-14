@@ -16,11 +16,15 @@ export type UserEncrypted = {
 }
 const registeredUsers: UserEncrypted[] = [];
 
+export const findUserByUsername = (username: string) => registeredUsers.find(x => x.username === username);
+
 export const createUser = async (username: string, password: string) => {
-    const existsUser = registeredUsers.find(x => x.username === username);
+    const existsUser = findUserByUsername(username);
 
     if(existsUser){
-        throw new Error('The username is already taken');
+        const conflictError = new Error('The username is already taken');
+        conflictError.name = 'ConflictError';
+        throw conflictError;
     }
 
     const passwordHash = await bcrypt.hash(password, 1);
@@ -34,7 +38,6 @@ export const createUser = async (username: string, password: string) => {
 
 const createJWTToken = (username: string, password: string) => {
     const payloadToken = {
-        id: '123', //FIX THIS
         username
     };
     return jwt.sign(payloadToken, process.env.SECRET_WORD || 'secret')
@@ -48,7 +51,9 @@ export const loginUser = async (username: string, password: string): Promise<Use
         : bcrypt.compare(password, registeredUser.passwordHash);
 
     if(!registeredUser || !passwordCorrect){
-        throw new Error('Invalid user or password');
+        const invalidDataError = new Error('Invalid user or password');
+        invalidDataError.name = 'InvalidDataError';
+        throw invalidDataError;
     }
 
     const jwt = await createJWTToken(username, password);
