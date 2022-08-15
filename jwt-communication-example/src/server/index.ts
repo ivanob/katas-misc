@@ -29,7 +29,9 @@ const handleError = (res: Response, error: any) => {
     });
 }
 
-/** To register a new user */
+/** To register a new user. It just creates the user in memory
+ * in the server. The password gets stored encrypted.
+ */
 app.post('/api/login/register', async (req: Request, res: Response) => {
     console.log('Received POST to register a new user')
     let userCredentials: UserClear = {
@@ -48,7 +50,11 @@ app.post('/api/login/register', async (req: Request, res: Response) => {
     }
 });
 
-/** To log-in and create a new JWT */
+/** This endpoint represents the authentication of the user previously
+ * created. By providint the credentials (username and password) it
+ * returns a JWT that is the result of the authentication and can be 
+ * used by the user in following operations.
+ */
 app.post('/api/login', async (req: Request, res: Response) => {
     console.log('Received POST to login user')
     let userCredentials: UserClear = {
@@ -72,36 +78,31 @@ app.post('/api/login', async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * This endpoint removes an user from the server. It can be used
+ * if the JWT token is compromised in order to push the user to
+ * log in again and create another JWT token.
+ */
 app.delete('/api/login/remove', async (req: Request, res: Response) => {
     console.log('Received POST to remove user jwt');
     try {
         const userCredentials = validateParams(req)
-        if(validateJWT(req)){
-            removeUser(userCredentials.username);
-            res.send("User removed succesfully");
-        }else{
-            const jwtError = new Error("The jwt token provided does not correspond to any user registered")
-            jwtError.name = 'JWTError';
-            throw jwtError;
-        }
+        removeUser(userCredentials.username, userCredentials.password);
+        res.send("User removed succesfully");
     } catch(error: any){
         handleError(res, error);
     }
 });
 
 /**
- * This is a random operation protected by authorization via jwt
+ * This is a random operation protected by authorization via JWT.
  */
 app.post('/api/operation', async (req: Request, res: Response) => {
     console.log('Received POST to perform an operation protected by jwt')
     try {
         if(validateJWT(req)){
             res.send("Operation performed succesfully!");
-        }else{
-            const jwtError = new Error("The jwt token provided does not correspond to any user registered")
-            jwtError.name = 'JWTError';
-            throw jwtError;
-        };
+        }
     } catch(error: any){
         handleError(res, error);
     }

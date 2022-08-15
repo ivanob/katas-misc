@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
+import e from "express";
 import jwt from 'jsonwebtoken';
+import { getCurrentTimestampSeconds } from "./utils";
 
 export type UserClear = {
     username: string,
@@ -16,7 +18,8 @@ export type UserEncrypted = {
 }
 const registeredUsers: UserEncrypted[] = [];
 
-export const findUserByUsername = (username: string) => registeredUsers.find(x => x.username === username);
+export const findUserByUsername = (username: string): UserEncrypted | undefined => registeredUsers.find(x => x.username === username);
+
 export const validatePassword = (username: string, password: string) => {
     const registeredUser = findUserByUsername(username);
     return (!registeredUser) 
@@ -42,31 +45,40 @@ export const createUser = async (username: string, password: string) => {
     return newUser;
 };
 
-export const removeUser = async (username: string) => {
+export const removeUser = async (username: string, password: string) => {
     const existsUser = findUserByUsername(username);
-
     if(existsUser){
-        const index = registeredUsers.indexOf(existsUser);
-        registeredUsers.splice(index, 1);
+        const validPassword = await bcrypt.compare(password, existsUser.passwordHash);
+        if(validPassword){
+            const index = registeredUsers.indexOf(existsUser);
+            registeredUsers.splice(index, 1);
+        }else{
+            const invalidDataError: Error = new Error('Username or password are incorrect');
+            invalidDataError.name = 'InvalidDataError';
+            throw invalidDataError;
+        }
+    }else{
+        const invalidDataError: Error = new Error('Username does not exists in memory');
+        invalidDataError.name = 'InvalidDataError';
+        throw invalidDataError;
     }
 }
 
-const createJWTToken = (username: string, password: string) => {
+const createJWTToken = (username: string) => {
     const payloadToken = {
         username,
-        password
+        timestamp: getCurrentTimestampSeconds()
     };
     return jwt.sign(payloadToken, process.env.SECRET_WORD || 'secret')
 }
 
 export const loginUser = async (username: string, password: string): Promise<UserJWT> => {
     if(!validatePassword(username, password)){
-        const invalidDataErrorr: Error = new Error('Username or password are incorrect');
-        invalidDataErrorr.name = 'InvalidDataError';
-        throw invalidDataErrorr;
+        const invalidDataError: Error = new Error('Username or password are incorrect');
+        invalidDataError.name = 'InvalidDataError';
+        throw invalidDataError;
     }else{
-        const passwordHash = await bcrypt.hash(password, 1);
-        const jwt = await createJWTToken(username, passwordHash);
+        const jwt = await createJWTToken(username);
         const registeredUser = findUserByUsername(username);
         return {
             ...registeredUser as UserEncrypted,

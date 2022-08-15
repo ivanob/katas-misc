@@ -23,3 +23,4 @@ This project uses the extension 'REST Client' from VSCode to execute the *.rest 
  - http-response-code-for-post-when-resource-already-exists
  - https://www.bugsnag.com/blog/anatomy-of-a-javascript-error
  - https://bobbyhadz.com/blog/javascript-error-cannot-set-headers-after-they-are-sent-to-client
+ - Is it good idea to store sensitive info in the payload of the JWT?: https://stackoverflow.com/questions/42652695/is-it-ok-to-store-user-credentials-in-the-jwt
