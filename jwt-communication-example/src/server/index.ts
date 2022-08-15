@@ -3,7 +3,6 @@ import express, {Request, Response} from 'express';
 import cors from 'cors';
 import {createUser, loginUser, removeUser, UserClear, UserJWT} from './users-service';
 import {validateJWT, validateParams} from './validators';
-import e from 'express';
 
 const app = express();
 app.use(express.json())
@@ -12,12 +11,16 @@ app.use(cors());
 const handleError = (res: Response, error: any) => {
     console.error(error.message);
     let errorStatus = 400;
+    //Bad request: wrong or missing parameters
     if(error.name === 'ValidationError'){
         errorStatus = 400;
+    //Conflict between the params sent and the state of the server
     }else if(error.name === 'ConflictError'){
         errorStatus = 409;
+    //Authorisation error
     }else if(error.name === 'InvalidDataError'){
         errorStatus = 401;
+    //Authorisation error: wrong JWT
     }else if(error.name === 'JWTError'){
         errorStatus = 401;
     }

@@ -17,6 +17,12 @@ export type UserEncrypted = {
 const registeredUsers: UserEncrypted[] = [];
 
 export const findUserByUsername = (username: string) => registeredUsers.find(x => x.username === username);
+export const validatePassword = (username: string, password: string) => {
+    const registeredUser = findUserByUsername(username);
+    return (!registeredUser) 
+        ? false
+        : bcrypt.compare(password, registeredUser.passwordHash);
+}
 
 export const createUser = async (username: string, password: string) => {
     const existsUser = findUserByUsername(username);
@@ -47,28 +53,24 @@ export const removeUser = async (username: string) => {
 
 const createJWTToken = (username: string, password: string) => {
     const payloadToken = {
-        username
+        username,
+        password
     };
     return jwt.sign(payloadToken, process.env.SECRET_WORD || 'secret')
 }
 
 export const loginUser = async (username: string, password: string): Promise<UserJWT> => {
-    const registeredUser = registeredUsers.find(user => user.username === username);
-
-    const passwordCorrect = (!registeredUser) 
-        ? false
-        : bcrypt.compare(password, registeredUser.passwordHash);
-
-    if(!registeredUser || !passwordCorrect){
-        const invalidDataError = new Error('Invalid user or password');
-        invalidDataError.name = 'InvalidDataError';
-        throw invalidDataError;
-    }
-
-    const jwt = await createJWTToken(username, password);
-
-    return {
-        ...registeredUser,
-        jwt
-    }
+    if(!validatePassword(username, password)){
+        const invalidDataErrorr: Error = new Error('Username or password are incorrect');
+        invalidDataErrorr.name = 'InvalidDataError';
+        throw invalidDataErrorr;
+    }else{
+        const passwordHash = await bcrypt.hash(password, 1);
+        const jwt = await createJWTToken(username, passwordHash);
+        const registeredUser = findUserByUsername(username);
+        return {
+            ...registeredUser as UserEncrypted,
+            jwt
+        }
+    };
 };

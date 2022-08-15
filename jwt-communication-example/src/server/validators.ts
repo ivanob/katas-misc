@@ -1,6 +1,5 @@
 import { findUserByUsername, UserClear } from "./users-service";
 import jwt from 'jsonwebtoken';
-import e from "express";
 
 export const validateParams = (req: any): UserClear => {
     if(!req.body || !(req.body.username && req.body.password)){
@@ -25,7 +24,7 @@ export const validateJWT = (req: any): boolean => {
         }else{
             const decodedUsername = decodedToken.username;
             const userStored = findUserByUsername(decodedUsername);
-            if(userStored){
+            if(userStored && decodedToken.password === userStored.passwordHash){
                 return true;
             }else{
                 return false;
