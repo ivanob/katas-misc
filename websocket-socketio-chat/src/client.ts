@@ -29,7 +29,7 @@ socket.on('connect', () => {
     console.log(`You connected with ID=${socket.id}`)
     process.stdout.write('>> ');
     /**
-     * Listener for reading the user lines
+     * Listener for reading the user commands form stdin
      */
     rl.on('line', (line: any) => {
         if(line.startsWith('JOIN ROOM ')){
@@ -61,8 +61,10 @@ socket.on('received-message', (message: string, fromUser: string, room: string) 
 })
 
 /**
- * When there is an error, i.e: failed authentication, the server notifies the
- * client using this event. 
+ * When there is an error, i.e: failed authentication, broken connection..., the 
+ * server notifies the client using this event. 'connect_error' is a predefined 
+ * event so, if something fails in the server and it calls the function next(...)
+ * with an error then we will receive that error here.
  */
 socket.on('connect_error', error => {
     console.error(`ERROR: ${error.message}`);
