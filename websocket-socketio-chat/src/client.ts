@@ -1,4 +1,5 @@
 import {io} from 'socket.io-client'
+import 'dotenv/config';
 const readline = require('readline');
 
 const rooms: string[] = [];
@@ -10,8 +11,14 @@ const rl = readline.createInterface({
 });
 
 const displayRooms = () => console.log(`Connected to rooms: ${rooms}`);
+/* This is a silly function to proff the call of code in the client
+from the server */
+const displayMessage = (str: string) => {
+    console.log(str);
+    process.stdout.write('>> ');
+};
 
-const socket = io('http://localhost:3000')
+const socket = io('http://localhost:3000', {auth: {token: process.env.TOKEN}})
 socket.on('connect', () => {
     console.log(`You connected with ID=${socket.id}`)
     process.stdout.write('>> ');
@@ -23,11 +30,13 @@ socket.on('connect', () => {
             const room = line.split(' ')[2]
             rooms.push(room);
             displayRooms();
-            socket.emit('join-room', room);
+            socket.emit('join-room', room, displayMessage);
         }
         else if(line.startsWith('ROOM ')){
             const split = line.split(' ');
-            socket.emit('send-message', split[2], split[1])
+            const room = split[1]
+            const msg = split[2]
+            socket.emit('send-message', msg, room)
         } 
         else{
             socket.emit('send-message', line)
