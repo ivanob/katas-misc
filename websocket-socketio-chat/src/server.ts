@@ -40,7 +40,9 @@ io.use((socket: any, next: any) => {
         console.log(`${socket.id} provided a valid auth token!`);
         next();
     }else{
-        next(new Error('Please send a valid token'))
+        const errorMsg = `${socket.id} failed providing a valid token!`;
+        console.log(errorMsg);
+        next(new Error(errorMsg))
     }
 })
 

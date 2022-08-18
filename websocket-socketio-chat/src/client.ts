@@ -19,6 +19,12 @@ const displayMessage = (str: string) => {
 };
 
 const socket = io('http://localhost:3000', {auth: {token: process.env.TOKEN}})
+
+/**
+ * This event is received when the user stablish a successful connection to the server.
+ * What I do here is start an infinite loop where the user can prompt messages 
+ * directly to the server, and he will handle them (broadcast, send to specifici room...)
+ */
 socket.on('connect', () => {
     console.log(`You connected with ID=${socket.id}`)
     process.stdout.write('>> ');
@@ -45,9 +51,21 @@ socket.on('connect', () => {
     })
 });
 
+/**
+ * Event received in the websocket is that we have received a message from
+ * another user.
+ */
 socket.on('received-message', (message: string, fromUser: string, room: string) => {
     console.log(`[${fromUser}]: ${message}`, (room)?`(to room ${room})`:'');
     process.stdout.write('>> ');
+})
+
+/**
+ * When there is an error, i.e: failed authentication, the server notifies the
+ * client using this event. 
+ */
+socket.on('connect_error', error => {
+    console.error(`ERROR: ${error.message}`);
 })
 
 console.log('Running chat client')
