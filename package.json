@@ -1,0 +1,15 @@
+{
+  "name": "katas-misc",
+  "version": "1.0.0",
+  "description": "Miscellaneous collection of small exercises, katas, snippets... in different languages",
+  "main": "index.js",
+  "workspaces": [
+    "katas/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
