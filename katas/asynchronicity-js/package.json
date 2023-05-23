@@ -1,0 +1,19 @@
+{
+  "name": "asynchronicity-js",
+  "version": "1.0.0",
+  "main": "micro-macro-tasks.js",
+  "type": "module",
+  "scripts": {
+    "prepare": "tsc",
+    "build": "tsc",
+    "scenario1": "ts-node src/then-catch/1-then-catch.ts",
+    "scenario2": "ts-node src/then-catch/2-then-catch.ts",
+    "scenario3": "ts-node src/micro-macro-tasks.ts",
+    "scenario4": "ts-node src/callbacks-vs-promises/1-callback-hell.ts",
+    "scenario5": "ts-node src/callbacks-vs-promises/2-functions-promisified.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
