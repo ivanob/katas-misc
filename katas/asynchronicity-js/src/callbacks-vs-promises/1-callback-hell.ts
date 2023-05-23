@@ -27,5 +27,9 @@ import {appendFile, copyFile, unlink, writeFile} from "node:fs"
  * executed when the users are fetched
  * appendFile: appends whatever we pass as second parameter to the file. When it is done, it calls the callback
  * copyFile: copies a file in the filesystem to the destination received in the second param and calls the callback
- * unlink: closes the file and calls the callback, which is a console.log
+ * unlink: closes the file and calls the callback, which is a console
+ * 
+ * This program shows a callback hell: a nested structure of function calls that receive a callback as parameters and
+ * that callback is receiving another callback... and so on. This code is not readable and the excesive identation
+ * makes it hard to maintain. Its a code smell in JS.
  */

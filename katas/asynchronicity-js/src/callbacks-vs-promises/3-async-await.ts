@@ -18,25 +18,21 @@ import {writeFile} from "node:fs"
         })
     }
 
-    function writeFilePromisified(file, initialData) {
+    async function writeFilePromisified(file, initialData) {
         return new Promise((resolve, reject) => {
             writeFile(file, initialData, () => resolve(true) )
         })
     }
 
-    writeFilePromisified(file, "")
-        .then(getUsersFromApiPromisified)
-        .then((users) => {return appendFile(file,  JSON.stringify(users))})
-        .then(() => {return copyFile(file, "../dest.json")})
-        .then(() => {return unlink(file)})
-        .then(() => {console.log('Process finished')})
+    await writeFilePromisified(file, "");
+    const users = await getUsersFromApiPromisified();
+    await appendFile(file, JSON.stringify(users));
+    await copyFile(file, "../dest.json");
+    await unlink(file);
+    console.log('Process finished');
 }
 
 /**
- * The idea is to promisify the functions I was calling before so instead of receiving a callback 
- * to call when they finish their execution, they will return a promise instead that we can handle
- * with the then/catch methods.
- * 
- * Just to save time I have promisified a couple of callback-style functions... and the rest I have
- * just imported its promisified version already cause its available to be used.
+ * This is one step further to improve the readability of so many then clauses called together.
+ * By using async/await we can give it a more imperative look 
  */

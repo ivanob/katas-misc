@@ -10,7 +10,9 @@
     "scenario2": "ts-node src/then-catch/2-then-catch.ts",
     "scenario3": "ts-node src/micro-macro-tasks.ts",
     "scenario4": "ts-node src/callbacks-vs-promises/1-callback-hell.ts",
-    "scenario5": "ts-node src/callbacks-vs-promises/2-functions-promisified.ts"
+    "scenario5": "ts-node src/callbacks-vs-promises/2-functions-promisified.ts",
+    "scenario6": "ts-node src/callbacks-vs-promises/3-async-await",
+    "scenario7": "ts-node src/then-catch/3-catch-selective.errors"
   },
   "keywords": [],
   "author": "",
