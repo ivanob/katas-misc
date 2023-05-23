@@ -23,8 +23,8 @@
 }
 
 /**
- * The idea behind this scenario is that we dont need to have a common catch for all the errors we can inner. In
- * this case we will handle each error independently
+ * The idea behind this scenario is to show that we dont need to have a common catch for all the errors we can chain.
+ * In this case we will handle each error independently
  * 
  * Explanation: func2Random is a function that has 0.5 probability of reject (and obviously 0.5 prob of resolve)
  * each time it gets called (in its 'then' clause) gets handled and the execution continues. So for instance if in line 8

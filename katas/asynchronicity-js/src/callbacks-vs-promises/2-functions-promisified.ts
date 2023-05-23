@@ -39,4 +39,7 @@ import {writeFile} from "node:fs"
  * 
  * Just to save time I have promisified a couple of callback-style functions... and the rest I have
  * just imported its promisified version already cause its available to be used.
+ * 
+ * Important: the point of returning the calls we are doing in the 'then' is to allow to continue
+ * chaining thens.
  */
