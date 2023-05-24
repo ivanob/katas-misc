@@ -13,7 +13,8 @@
     "scenario5": "ts-node src/callbacks-vs-promises/2-functions-promisified.ts",
     "scenario6": "ts-node src/callbacks-vs-promises/3-async-await",
     "scenario7": "ts-node src/then-catch/3-catch-selective.errors",
-    "scenario8": "ts-node src/then-catch/4-order-catch-finally"
+    "scenario8": "ts-node src/then-catch/4-order-catch-finally",
+    "scenario9": "ts-node src/event-emmiter"
   },
   "keywords": [],
   "author": "",
