@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CoverageAnalysisModule } from './contexts/coverage-analysis/coverage-analysis.module';
 import { ImprovementJobsModule } from './contexts/improvement-jobs/improvement-jobs.module';
-import { ReposModule } from './contexts/repos/repos.module';
+import { GithubReposModule } from './contexts/github-repos/github-repos.module';
 
 @Module({
-  imports: [CoverageAnalysisModule, ImprovementJobsModule, ReposModule],
+  imports: [CoverageAnalysisModule, ImprovementJobsModule, GithubReposModule],
   controllers: [],
   providers: [],
 })

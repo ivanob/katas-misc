@@ -6,6 +6,8 @@
   - reads files
   - delivers changes back to GitHub.
 
+coverage-analysis and improvement-jobs depend on the github-repos BC.
+github-repos is a service BC providing shared GitHub operations
 
 # API
 

@@ -1,19 +1,16 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { CoverageAnalysisApplicationService } from '../application/coverage-analysis.application.service';
 
-@Controller('coverage-analysis')
+@Controller('repos')
 export class CoverageAnalysisController {
   constructor(
     private readonly coverageAnalysisApplicationService: CoverageAnalysisApplicationService,
   ) {}
 
-  @Get('status')
-  getStatus(): string {
-    return this.coverageAnalysisApplicationService.getStatus();
-  }
+  @Post('analyze')
+  runCoverageAnalysis() {}
 
-  @Post('run')
-  runCoverageAnalysis(): string {
-    return this.coverageAnalysisApplicationService.runCoverageAnalysis();
-  }
+  @Get(':repoId/analyze/:jobId')
+  getCoverageAnalysisStatus() {}
+
 }
