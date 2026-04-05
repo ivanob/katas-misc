@@ -1,4 +1,4 @@
-export class DeliveryInMemoryRepository {
+export class ReposInMemoryRepository {
   private readonly deliveries: string[] = [];
 
   register(deliveryId: string): void {

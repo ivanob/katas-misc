@@ -10,7 +10,8 @@
 ```
 POST /repos/analyze
 POST /repos/improve
-GET /jobs/:jobId or GET /repos/:repoId/status
+GET /repos/:repoID/analyze/:jobID
+GET /repos/:repoID/improve/:jobID
 ```
 
 ### Requests / Responses
@@ -49,5 +50,42 @@ Response
 {
   "jobId": "job_789",
   "status": "queued"
+}
+```
+
+#### GET /repos/:repoID/analyze/:jobID
+
+Response
+```
+{
+  "status: "READY",
+  "files": [
+    {
+      "path": "...",
+      "coverage": 30
+    },
+    {
+      "path": "...",
+      "coverage": 40
+    },
+    ...
+  ]
+}
+```
+
+```
+{
+  "status: "WORKING",
+  "files": []
+}
+```
+
+#### GET /repos/:repoID/improve/:jobID
+
+Response
+```
+{
+  "status": "READY",
+  "pr": "url-of-PR"
 }
 ```

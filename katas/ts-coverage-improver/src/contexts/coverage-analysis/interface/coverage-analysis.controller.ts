@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { CoverageAnalysisApplicationService } from '../application/coverage-analysis.application.service';
 
 @Controller('coverage-analysis')
@@ -10,5 +10,10 @@ export class CoverageAnalysisController {
   @Get('status')
   getStatus(): string {
     return this.coverageAnalysisApplicationService.getStatus();
+  }
+
+  @Post('run')
+  runCoverageAnalysis(): string {
+    return this.coverageAnalysisApplicationService.runCoverageAnalysis();
   }
 }
