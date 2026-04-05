@@ -1,4 +1,4 @@
-export class ImprovementJobsDomainService {
+export class DomainService {
   describeContext(): string {
     return 'Improvement Jobs';
   }

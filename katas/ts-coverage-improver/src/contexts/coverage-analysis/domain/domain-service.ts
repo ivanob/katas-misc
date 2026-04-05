@@ -1,4 +1,4 @@
-export class CoverageAnalysisDomainService {
+export class DomainService {
   describeContext(): string {
     return 'Coverage Analysis';
   }
