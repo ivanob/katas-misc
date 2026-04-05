@@ -2,7 +2,9 @@
 # Bounded Contexts (DDD)
 - coverage-analysis: Detects low-coverage TypeScript files and evaluates thresholds.
 - improvements-jobs: Interacts with the AI CLI in isolation and produces candidate test files.
-- delivery: delivers changes back to GitHub.
+- repos: handles github repos:
+  - reads files
+  - delivers changes back to GitHub.
 
 
 # API
