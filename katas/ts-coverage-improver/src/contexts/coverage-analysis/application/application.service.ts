@@ -12,14 +12,10 @@ export class ApplicationService {
     private readonly githubService: GithubApplicationService,
   ) {}
 
-  getStatus(): string {
-    return `${this.domainService.describeContext()} ready`;
-  }
-
   runAnalysis(dto: AnalyzeRequestDto): AnalysisJob {
-    const jobId = `job_${Math.random().toString(36).substr(2, 9)}`;
-    this.performAnalysis(new AnalysisJob(jobId), dto);
-    return { id: jobId };
+    const job = AnalysisJob.create();
+    this.performAnalysis(job, dto); // Async job, I dont await
+    return job;
   }
 
   private async performAnalysis(job: AnalysisJob, dto: AnalyzeRequestDto) {
