@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApplicationService } from '../application/application.service';
+import { GithubApplicationService } from '../application/application.service';
 
 @Controller('github')
-export class Controller {
-  constructor(private readonly applicationService: ApplicationService) {}
+export class GithubController {
+  constructor(private readonly applicationService: GithubApplicationService) {}
 
   @Get('status')
   getStatus(): string {

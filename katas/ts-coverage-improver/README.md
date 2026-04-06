@@ -23,12 +23,14 @@ GET /repos/:repoID/improve/:jobID
 #### POST /repos/analyze
 
 Request
+
 ```
 {
   "repositoryUrl": "https://github.com/org/repo",
   "branch": "main",
   "coverageThreshold": 80
 }
+
 ```
 
 Response (Async)
@@ -49,7 +51,7 @@ Request
   "filePath": "src/foo.ts"
 }
 ```
-Response
+Response (Async)
 ```
 {
   "jobId": "job_789",
@@ -77,6 +79,8 @@ Response
 }
 ```
 
+OR 
+
 ```
 {
   "status: "WORKING",
@@ -87,9 +91,10 @@ Response
 #### GET /repos/:repoID/improve/:jobID
 
 Response
+
 ```
 {
   "status": "READY",
-  "pr": "url-of-PR"
+  "pr": "url-to-PR"
 }
 ```

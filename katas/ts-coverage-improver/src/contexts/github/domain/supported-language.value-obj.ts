@@ -1,1 +1,3 @@
-export type SupportedLanguage = 'typescript';
+export enum SupportedLanguages {
+  TYPESCRIPT = 'typescript'
+}

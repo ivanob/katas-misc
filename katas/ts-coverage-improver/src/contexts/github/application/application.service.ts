@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { SupportedLanguage } from '../domain/supported-language.value-obj';
+import { SupportedLanguages } from '../domain/supported-language.value-obj';
 import { SourceFile } from '../domain/source-file.entity';
 
 @Injectable()
-export class ApplicationService {
+export class GithubApplicationService {
 
   getStatus(): string {
     return 'GitHub integration ready';
   }
 
-  getRepoSourceFiles(language: SupportedLanguage): SourceFile[] {
+  getRepoSourceFiles(language: SupportedLanguages): SourceFile[] {
     return [];
   }
 
   calculateSourceFileTestCoverage(file: SourceFile): number {
-    return 0;
+    return Math.floor(Math.random() * 101); // Simulate coverage percentage
   }
 
 }

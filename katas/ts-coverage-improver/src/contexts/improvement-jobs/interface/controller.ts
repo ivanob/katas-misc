@@ -1,12 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApplicationService } from '../application/application.service';
+import { Controller, Get, Post } from "@nestjs/common";
+import { ApplicationService } from "../application/application.service";
 
-@Controller('improvement-jobs')
-export class Controller {
+@Controller("repos")
+export class ImprovementJobsController {
   constructor(private readonly applicationService: ApplicationService) {}
 
-  @Get('status')
-  getStatus(): string {
-    return this.applicationService.getStatus();
-  }
+  @Post("analyze")
+  runImprovementJob() {}
+
+  @Get(":repoId/improve/:jobId")
+  getImprovementJobStatus() {}
 }
