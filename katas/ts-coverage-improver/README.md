@@ -88,6 +88,15 @@ OR
 }
 ```
 
+OR
+
+```
+{
+  "status: "ERROR",
+  "files": []
+}
+```
+
 #### GET /repos/:repoID/improve/:jobID
 
 Response

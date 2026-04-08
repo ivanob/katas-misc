@@ -1,4 +1,4 @@
 @repoId = repo_123
 @jobId = job_456
 
-GET http://localhost:3000/repos/:repoId/analyze/:jobId HTTP/1.1
+GET http://localhost:3000/repos/{{repoId}}/analyze/{{jobId}} HTTP/1.1

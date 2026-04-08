@@ -4,6 +4,8 @@ import { AnalysisJob } from "../domain/analysis-job.entity";
 import { GithubApplicationService } from "../../github/application/application.service";
 import { SupportedLanguages } from "../../github/domain/supported-language.value-obj";
 import { AnalyzeRequestDto } from "../domain/analyze-request.dto";
+import { FileCoverage } from "../domain/file-coverage.entity";
+import { RepoCoverage } from "../domain/repo-coverage.aggr";
 
 @Injectable()
 export class ApplicationService {
@@ -13,20 +15,26 @@ export class ApplicationService {
   ) {}
 
   runAnalysis(dto: AnalyzeRequestDto): AnalysisJob {
+    console.log('Starting analysis job:');
     const job = AnalysisJob.create();
     this.performAnalysis(job, dto); // Async job, I dont await
     return job;
   }
 
   private async performAnalysis(job: AnalysisJob, dto: AnalyzeRequestDto) {
-    const sourceFiles = this.githubService.getRepoSourceFiles(
+    const sourceFiles = await this.githubService.getRepoSourceFiles(
       SupportedLanguages.TYPESCRIPT,
     );
-    const filesWithCoverage = sourceFiles.map((file) => {
+    const filesWithCoverage: FileCoverage[] = sourceFiles.map((file) => {
       const coverage = this.githubService.calculateSourceFileTestCoverage(file);
-      // do something with coverage
-      return { file, coverage };
+      return { filePath: file.path, coverage };
     });
+    this.domainService.identifyLowCoverageFiles(filesWithCoverage, dto.coverageThreshold);
     console.log('Analysis completed for job:', job.id);
+  }
+
+  public getAnalysisStatus(repoId: string, jobId: string): RepoCoverage[] {
+    // For simplicity, we return a static status. In a real implementation, this would check the job's progress.
+    return [];
   }
 }

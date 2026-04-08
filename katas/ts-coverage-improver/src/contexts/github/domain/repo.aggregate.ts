@@ -18,7 +18,8 @@ export class Repo {
 
   getAverageTestCoverage(): number {
     if (this.files.length === 0) return 0;
-    const total = this.files.reduce((sum, file) => sum + file.coverage, 0);
+    // const total = this.files.reduce((sum, file) => sum + file.coverage, 0);
+    const total = 0;
     return total / this.files.length;
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApplicationService } from '../application/application.service';
 import { AnalyzeRequestDto } from '../domain/analyze-request.dto';
 
@@ -14,8 +14,11 @@ export class CoverageAnalysisController {
   }
 
   @Get(':repoId/analyze/:jobId')
-  getCoverageAnalysisStatus() {
-
+  getCoverageAnalysisStatus(
+    @Param('repoId') repoId: string,
+    @Param('jobId') jobId: string,
+  ) {
+    return this.applicationService.getAnalysisStatus(repoId, jobId);
   }
 
 }

@@ -1,5 +1,5 @@
 import { Repo } from "src/contexts/github/domain/repo.aggregate";
-import { FileCoverage } from "./file-coverage.aggregator";
+import { FileCoverage } from "./file-coverage.entity";
 import { ProjectStatus } from "./project-status.value-obj";
 
 export class DomainService {
