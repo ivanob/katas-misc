@@ -12,12 +12,16 @@ export class GithubApplicationService {
     return 'GitHub integration ready';
   }
 
-  async getRepoSourceFiles(language: SupportedLanguages): Promise<SourceFile[]> {
-    return await this.githubApiClient.getRepositoryFiles('safishamsi', 'graphify'); // Placeholder for actual implementation
+  async getRepoSourceFiles(language: SupportedLanguages, repoName: string, repoOwner: string): Promise<SourceFile[]> {
+    return this.githubApiClient.getRepositoryFiles(repoOwner, repoName, language);
   }
 
-  calculateSourceFileTestCoverage(file: SourceFile): number {
+  async getTestFileAssociated(repoName: string, repoOwner: string, file: SourceFile): Promise<number> {
+    const hasTest = await this.githubApiClient.getTestFileAssociated(repoName, repoOwner, file);
     return Math.floor(Math.random() * 101); // Simulate coverage percentage
   }
 
+  async calculateSourceFileTestCoverage(file: SourceFile): Promise<number> {
+    this.githubApiClient.getTestFileAssociated(file.path, file.downloadUrl, file.path); // Just to simulate some processing
+  }
 }

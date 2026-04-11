@@ -1,5 +1,6 @@
 export class AnalyzeRequestDto {
-  repositoryUrl: string;
+  repoName: string;
+  repoOwner: string;
   branch: string;
   coverageThreshold: number;
 }

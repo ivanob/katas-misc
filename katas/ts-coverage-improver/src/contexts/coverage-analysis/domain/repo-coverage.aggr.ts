@@ -3,8 +3,9 @@ import { FileCoverage } from "./file-coverage.entity";
 
 export class RepoCoverage {
   constructor(
-    readonly repoId: string,
-    readonly repositoryUrl: string,
+    readonly jobId: string,
+    readonly repoName: string,
+    readonly repoOwner: string,
     readonly averageCoverage: number,
     readonly fileCoverages: FileCoverage[],
   ) {}

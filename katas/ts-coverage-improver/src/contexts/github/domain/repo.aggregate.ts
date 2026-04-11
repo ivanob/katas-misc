@@ -1,7 +1,7 @@
 import { SourceFile } from './source-file.entity';
 
 export class Repo {
-  private readonly files: SourceFile[] = [];
+  private readonly sourceFiles: SourceFile[] = [];
 
   constructor(
     readonly id: string,
@@ -9,17 +9,25 @@ export class Repo {
   ) {}
 
   addFile(file: SourceFile): void {
-    this.files.push(file);
+    this.sourceFiles.push(file);
   }
 
-  getFiles(): SourceFile[] {
-    return [...this.files]; // Return copy to prevent external mutation
+  addTestFile(file: SourceFile): void {
+    this.testFiles.push(file);
+  }
+
+  getSourceFiles(): SourceFile[] {
+    return [...this.sourceFiles]; // Return copy to prevent external mutation
+  }
+
+  getTestFiles(): SourceFile[] {
+    return [...this.testFiles]; // Return copy to prevent external mutation
   }
 
   getAverageTestCoverage(): number {
-    if (this.files.length === 0) return 0;
+    if (this.sourceFiles.length === 0) return 0;
     // const total = this.files.reduce((sum, file) => sum + file.coverage, 0);
     const total = 0;
-    return total / this.files.length;
+    return total / this.sourceFiles.length;
   }
 }
